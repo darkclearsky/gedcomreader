@@ -125,15 +125,34 @@ BOOL CgrDlg::OnInitDialog()
 	SetWindowLong(GetDlgItem(IDC_EDITDATA)->m_hWnd, GWLP_USERDATA, RESIZE_ADJUST_BOTTOMRIGHT);
 	SetWindowLong(GetDlgItem(IDC_DRAW)->m_hWnd, GWLP_USERDATA, RESIZE_ADJUST_BOTTOMRIGHT);
 	SetWindowLong(GetDlgItem(IDC_LISTLOG)->m_hWnd, GWLP_USERDATA, RESIZE_FOLLOW_BOTTOM_ADJUST_RIGHT);
+	SetEnableMenu();
+
+	// create chart control and place appropriately..
+	RECT rc, drc, nrc;
+	GetWindowRect(&drc);
+	m_CtrlDraw.GetWindowRect(&rc);
+	nrc.left = (rc.left - drc.left) -
+		GetSystemMetrics(SM_CXDLGFRAME) -
+		GetSystemMetrics(SM_CXPADDEDBORDER) -
+		GetSystemMetrics(SM_CXBORDER);
+	nrc.right = nrc.left + rc.right - rc.left;
+	nrc.top = rc.top - drc.top -
+		GetSystemMetrics(SM_CYCAPTION) -
+		GetSystemMetrics(SM_CXPADDEDBORDER) -
+		GetSystemMetrics(SM_CYBORDER) -
+		GetSystemMetrics(SM_CYDLGFRAME) -
+		GetSystemMetrics(SM_CYMENU);
+	nrc.bottom = nrc.top + rc.bottom - rc.top;
+
+	m_CtrlDraw.ShowWindow(SW_HIDE);
+	m_CtrlChart.Create(_T("Chart"), SS_USERITEM, nrc, this);
+	SetWindowLong(m_CtrlChart.m_hWnd, GWLP_USERDATA, RESIZE_ADJUST_BOTTOMRIGHT);
 
 	// set up tabs and the subordinate dialogs
 	m_CtrlTab.InsertItem(0, _T("Info"));
 	m_CtrlTab.InsertItem(1, _T("Circle"));
-	m_CtrlDraw.ShowWindow(SW_HIDE);
 
 	SetSize();
-
-	SetEnableMenu();
 
 	return TRUE;  // return TRUE  unless you set the focus to a control
 }
@@ -268,6 +287,9 @@ BOOL CgrDlg::OnCommand(WPARAM wParam, LPARAM lParam)
 							hParentTree = pindi->hti;
 							pindi = pindi->mother;
 						}
+						pindi = &Ged.indiList.GetHead();
+						m_CtrlChart.SetHeadIndi(pindi);
+						m_CtrlChart.Invalidate();
 					}
 				}
 			}
@@ -350,11 +372,12 @@ void CgrDlg::OnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult)
 	switch (TabSelected) {
 	case 0 : 
 		m_CtrlTextData.ShowWindow(SW_SHOW);
-		m_CtrlDraw.ShowWindow(SW_HIDE);
+		m_CtrlChart.ShowWindow(SW_HIDE);
 		break;
 	case 1 :
 		m_CtrlTextData.ShowWindow(SW_HIDE);
-		m_CtrlDraw.ShowWindow(SW_SHOW);
+		m_CtrlChart.ShowWindow(SW_SHOW);
+		m_CtrlChart.Invalidate(TRUE);
 		break;
 	}
 	// TODO: Add your control notification handler code here

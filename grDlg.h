@@ -4,6 +4,7 @@
 
 #pragma once
 #include "GedData.h"
+#include "CChart.h"
 #include "ResizeDialog.h"
 
 #define MAX_GEDCOMFILENAMESIZE 132
@@ -56,5 +57,6 @@ public:
 	afx_msg void OnEnChangeEditdata();
 	CTabCtrl m_CtrlTab;
 	CStatic m_CtrlDraw;
+	CChart m_CtrlChart;
 	afx_msg void OnSelchangeTab(NMHDR* pNMHDR, LRESULT* pResult);
 };

@@ -183,6 +183,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="CChart.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="GedData.h" />
     <ClInclude Include="gr.h" />
@@ -192,6 +193,7 @@
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="CChart.cpp" />
     <ClCompile Include="GedData.cpp" />
     <ClCompile Include="gr.cpp" />
     <ClCompile Include="grDlg.cpp" />
